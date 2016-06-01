@@ -14,9 +14,17 @@ after_initialize do
           new_topic_category_id = Category.where(name: SiteSetting.new_topic_notification_category)
           Rails.logger.info("Topic category id: #{new_topic_category_id}")
           if new_topic_category_id then
-            last_topic = Topic.where(category_id: new_topic_category_id).recent(1).first
-            Rails.logger.info("Last topic: #{last_topic.title}")
+            last_topic = nil
+            # I'm sure there's a magic ruby way to get the last of two elements or nil...
+            Topic.where(category_id: new_topic_category_id).recent(2) do | existing_topic |
+              if existing_topic.id != topic.id
+                last_topic = existing_topic
+              else
+                Rails.logger.info("No previous topic found in this category")
+              end
+            end
             if last_topic then
+              Rails.logger.info("Last topic: #{last_topic.title}")
               topic_embed = TopicEmbed.where(topic_id: topic.id).first
               if topic_embed then
                 Rails.logger.info("Topic embed: #{topic_embed}")
