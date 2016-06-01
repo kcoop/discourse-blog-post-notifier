@@ -1,0 +1,6 @@
+en:
+  site_settings:
+    new_topic_notification_enabled: "Enable notification of new topics."
+    new_topic_notifying_user: "Who will post a notice in the previous topic when a new topic appears."
+    new_topic_notification_category: "Category of topic that generates new topic notifications."
+    new_topic_raw_body: "Template for html of the post. Can contain substitutions {blog_new_topic_url}, {title}, and {discourse_new_topic_url}."
