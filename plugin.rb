@@ -17,10 +17,9 @@ after_initialize do
             last_topic = nil
             # I'm sure there's a magic ruby way to get the last of two elements or nil...
             Topic.where(category_id: new_topic_category_id).recent(2) do | existing_topic |
+              Rails.logger.info("Checking if topic #{existing_topic_id} matches #{topic.id}")
               if existing_topic.id != topic.id
                 last_topic = existing_topic
-              else
-                Rails.logger.info("No previous topic found in this category")
               end
             end
             if last_topic then
@@ -36,16 +35,16 @@ after_initialize do
                 creator = PostCreator.new(user_notifying_new_post, topic_id: last_topic.id, raw: raw)
                 creator.create
               else
-                Rails.logger.error("Could not find topic embed for topic id: #{topic.id}")
+                Rails.logger.info("Could not find topic embed for topic id: #{topic.id}")
               end
             else
-              Rails.logger.error("Could not find previous topic in category: #{SiteSetting.new_topic_notification_category}")
+              Rails.logger.info("Could not find previous topic in category: #{SiteSetting.new_topic_notification_category}")
             end
           else
-            Rails.logger.error("Could not find matching category for topics to notify against: #{SiteSetting.new_topic_notification_category}")
+            Rails.logger.info("Could not find matching category for topics to notify against: #{SiteSetting.new_topic_notification_category}")
           end
         else
-          Rails.logger.error("Could not find matching user to assign as notifier: #{SiteSetting.new_topic_notifying_user}")
+          Rails.logger.info("Could not find matching user to assign as notifier: #{SiteSetting.new_topic_notifying_user}")
         end
       end
   end
