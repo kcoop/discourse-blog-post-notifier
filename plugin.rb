@@ -1,4 +1,4 @@
-# name: discourse-new-post=notifier
+# name: discourse-new-post-notifier
 # about: A plugin to notify in previous topic that a new topic has been created by an external embed.
 # version: 0.0.1
 # authors: Ken Cooper
@@ -6,15 +6,20 @@
 
 after_initialize do
   DiscourseEvent.on(:topic_created) do | topic, options, user |
+    Rails.logger.info("Topic created, maybe notifying, enabled: #{SiteSetting.new_topic_notification_enabled} notifyinguser: #{SiteSetting.new_topic_notifying_user}")
       if SiteSetting.new_topic_notification_enabled && SiteSetting.new_topic_notifying_user.present? then
         user_notifying_new_post = User.where(username_lower: SiteSetting.new_topic_notifying_user).first
+        Rails.logger.info("User notifying: #{user_notifying_new_post}")
         if user_notifying_new_post then
           new_topic_category_id = Category.where(name: SiteSetting.new_topic_notification_category)
+          Rails.logger.info("Topic category id: #{new_topic_category_id}")
           if new_topic_category_id then
             last_topic = Topic.where(category_id: new_topic_category_id).recent(1).first
+            Rails.logger.info("Last topic: #{last_topic.title}")
             if last_topic then
               topic_embed = TopicEmbed.where(topic_id: topic.id).first
               if topic_embed then
+                Rails.logger.info("Topic embed: #{topic_embed}")
                 embed_url = topic_embed.embed_url
                 raw = SiteSetting.new_topic_raw_body
                 raw = raw.sub('{blog_new_topic_url}', embed_url)
