@@ -18,7 +18,7 @@ after_initialize do
                 embed_url = topic_embed.embed_url
                 raw = SiteSetting.new_topic_raw_body
                 raw = raw.sub('{blog_new_topic_url}', embed_url)
-                raw = raw.sub('{title}', title)
+                raw = raw.sub('{title}', topic.title)
                 raw = raw.sub('{discourse_new_topic_url}', topic.url)
                 creator = PostCreator.new(user_notifying_new_post, topic_id: last_topic.id, raw: raw)
                 creator.create
