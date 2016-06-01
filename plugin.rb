@@ -9,7 +9,7 @@ after_initialize do
       if SiteSetting.new_topic_notification_enabled && SiteSetting.new_topic_notifying_user.present? then
         user_notifying_new_post = User.where(username_lower: SiteSetting.new_topic_notifying_user).first
         if user_notifying_new_post then
-          new_topic_category_id = Category.where(name: SiteSetting.new_topic_notification_category
+          new_topic_category_id = Category.where(name: SiteSetting.new_topic_notification_category)
           if new_topic_category_id then
             last_topic = Topic.where(category_id: new_topic_category_id).recent(1).first
             if last_topic then
@@ -18,7 +18,7 @@ after_initialize do
                 embed_url = topic_embed.embed_url
                 raw = SiteSetting.new_topic_raw_body
                 raw = raw.sub('{blog_new_topic_url}', embed_url)
-                raw = raw.sub('{title}', title})
+                raw = raw.sub('{title}', title)
                 raw = raw.sub('{discourse_new_topic_url}', topic.url)
                 creator = PostCreator.new(user_notifying_new_post, topic_id: last_topic.id, raw: raw)
                 creator.create
