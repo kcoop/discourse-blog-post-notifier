@@ -8,10 +8,10 @@ after_initialize do
   DiscourseEvent.on(:topic_created) do | topic, options, user |
     Rails.logger.debug("GOTHERE")
     Rails.logger.debug("Topic category: #{topic.category}")
-    Rails.logger.debug("Topic created, maybe notifying, enabled: #{SiteSetting.new_topic_notification_enabled} notifyinguser: #{SiteSetting.new_topic_notifying_user} topic category: #{topic.category.name}")
+#    Rails.logger.debug("Topic created, maybe notifying, enabled: #{SiteSetting.new_topic_notification_enabled} notifyinguser: #{SiteSetting.new_topic_notifying_user} topic category: #{topic.category.name}")
     # TODO need to detect category is proper, need to map category to category name.
 
-      if SiteSetting.new_topic_notification_enabled && SiteSetting.new_topic_notifying_user.present?&& topic.category.name == SiteSetting.new_topic_notification_category.strip then
+      if SiteSetting.new_topic_notification_enabled && SiteSetting.new_topic_notifying_user.present? then # && topic.category.name == SiteSetting.new_topic_notification_category.strip then
         user_notifying_new_post = User.where(username_lower: SiteSetting.new_topic_notifying_user.strip).first
         Rails.logger.debug("User notifying: #{user_notifying_new_post}")
         if user_notifying_new_post then
