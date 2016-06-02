@@ -17,13 +17,10 @@ after_initialize do
           last_topic = nil
           Rails.logger.info("Topic category id #{topic.category.id}")
           Rails.logger.info("Count of topics matching category id: #{Topic.where(category_id: topic.category.id).count}")
-          Topic.where(category_id: topic.category.id).recent(2) do | existing_topic |
-            Rails.logger.info("Checking if topic #{topic.category.id} matches #{topic.id}")
-            if existing_topic.id != topic.id
-              last_topic = existing_topic
-            end
-          end
-          if last_topic then
+          # If there's only one topic in this category, it's the new one, don't notify
+          two_most_recent_topics_in_category = Topic.where(category_id: topic.category.id).recent(2)
+          if two_most_recent_topics_in_category.count == 2
+            last_topic = two_most_recent_topics_in_category.last
             Rails.logger.info("Last topic: #{last_topic.title}")
             topic_embed = TopicEmbed.where(topic_id: topic.id).first
             if topic_embed then
@@ -39,7 +36,7 @@ after_initialize do
               Rails.logger.info("Could not find topic embed for topic id: #{topic.id}")
             end
           else
-            Rails.logger.info("Could not find previous topic in category: #{SiteSetting.new_topic_notification_category}")
+            Rails.logger.info("No previous topic in category: #{SiteSetting.new_topic_notification_category}")
           end
         else
           Rails.logger.info("Could not find matching user to assign as notifier: #{SiteSetting.new_topic_notifying_user}")
