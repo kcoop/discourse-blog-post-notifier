@@ -11,7 +11,7 @@ after_initialize do
         user_notifying_new_post = User.where(username_lower: SiteSetting.new_topic_notifying_user).first
         Rails.logger.debug("User notifying: #{user_notifying_new_post}")
         if user_notifying_new_post then
-          new_topic_category_id = Category.where(name: SiteSetting.new_topic_notification_category)
+          new_topic_category_id = Category.where(name: SiteSetting.new_topic_notification_category).first.id
           Rails.logger.debug("Topic category id: #{new_topic_category_id}")
           if new_topic_category_id then
             last_topic = nil

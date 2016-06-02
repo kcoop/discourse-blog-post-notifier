@@ -6,4 +6,4 @@ plugins:
   new_topic_notification_category:
     default: 'Blog Post'
   new_topic_raw_body:
-    default: '<h2>New Post!</h2><h3><a href="#{blog_new_topic_url}">#{title}</a></h3><a href="#{discourse_new_topic_url}">Go directly to topic</a>'
+    default: '<h2>New Post!</h2><h3><a href="{blog_new_topic_url}">{title}</a></h3><a href="{discourse_new_topic_url}">Go directly to topic</a>'
