@@ -15,6 +15,8 @@ after_initialize do
         Rails.logger.info("User notifying: #{user_notifying_new_post}")
         if user_notifying_new_post then
           last_topic = nil
+          Rails.logger.info("Topic category id #{topic.category.id}")
+          Rails.logger.info("Count of topics matching category id: #{Topic.where(category_id: topic.category.id).count}")
           Topic.where(category_id: topic.category.id).recent(2) do | existing_topic |
             Rails.logger.info("Checking if topic #{topic.category.id} matches #{topic.id}")
             if existing_topic.id != topic.id
